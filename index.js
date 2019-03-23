@@ -34,14 +34,18 @@ const microRequest = (client, options) => {
       request.setTimeout(maxTime)
 
       request.on('timeout', () => {
-        reject(new Error('Response took too long'))
+        const error = new Error('Response took too long')
+        error.statusCode = 408
+        reject(error)
       })
 
       request.on('data', chunk => {
         bytes += Buffer.byteLength(chunk)
 
         if (bytes > maxBytes) {
-          return reject(new Error('Response is too large'))
+          const error = new Error('Response is too large')
+          error.statusCode = 400
+          return reject(error)
         }
 
         payload.push(chunk)
