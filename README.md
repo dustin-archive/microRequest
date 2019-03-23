@@ -1,7 +1,7 @@
 
 # microRequest
 
-## Manual Requests
+## Making Requests
 
 ```js
 import http2 from 'http2'
@@ -14,8 +14,11 @@ const fooPromise = microRequest(client, { method: 'GET', path: '/foo' })
 const barPromise = microRequest(client, { method: 'GET', path: '/bar' })
 
 const task = async () => {
-  const foo = await fooPromise
-  const bar = await barPromise
+  const fooResponse = await fooPromise
+  const barResponse = await barPromise
+
+  const foo = fooResponse.body.toString() // buffer to string
+  const bar = JSON.parse(barResponse.body) // parse json
 
   // do things...
 }
@@ -43,7 +46,7 @@ for (let i = 0; i < 99; i++) {
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      hello: 'world'
+      data: i
     })
   }
 
